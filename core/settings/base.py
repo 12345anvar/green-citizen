@@ -26,6 +26,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'apps.news',
+    'apps.steps',
+    'apps.services',
+    'apps.events',
 ]
 
 THIRD_PARTY_APPS = [
@@ -41,10 +46,6 @@ MY_APPS = [
     'apps.notifications',
     'apps.integrations',
     'apps.media_test',
-    'apps.news',
-    'apps.steps',
-    'apps.services',
-    'apps.events',
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS
