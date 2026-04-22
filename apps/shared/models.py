@@ -1,7 +1,6 @@
 import os
 import uuid
 
-from django.conf import settings
 from django.db import models
 
 
@@ -114,36 +113,3 @@ class Media(BaseModel):
                 return file_type
 
         return cls.FileType.OTHER
-
-class Onboarding(models.Model):
-    """
-    Onboarding model for user onboarding process
-    """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='onboarding')
-    completed_steps = models.JSONField(default=dict, help_text="JSON object of completed onboarding steps")
-    is_completed = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = 'onboarding'
-        verbose_name = 'Onboarding'
-        verbose_name_plural = 'Onboardings'
-
-    def __str__(self):
-        return f"Onboarding for {self.user}"
-
-
-class FAQ(models.Model):
-    """
-    Frequently Asked Questions model
-    """
-    question = models.CharField(max_length=500)
-    answer = models.TextField()
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        db_table = 'faqs'
-        verbose_name = 'FAQ'
-        verbose_name_plural = 'FAQs'
-
-    def __str__(self):
-        return self.question

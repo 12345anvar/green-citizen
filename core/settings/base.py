@@ -9,6 +9,8 @@ Environment-specific overrides (local/production) live in:
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # -------------------------------------------------------------------
 # PATHS
 # -------------------------------------------------------------------
@@ -26,11 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'apps.news',
-    'apps.steps',
-    'apps.services',
-    'apps.events',
 ]
 
 THIRD_PARTY_APPS = [
@@ -38,6 +35,8 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MY_APPS = [
@@ -45,7 +44,6 @@ MY_APPS = [
     'apps.users',
     'apps.notifications',
     'apps.integrations',
-    'apps.media_test',
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS
@@ -190,4 +188,19 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
+}
+
+# -------------------------------------------------------------------
+# CELERY CONFIG
+# -------------------------------------------------------------------
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/2'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'hello-dev': {
+        'task': 'apps.users.utils.verification_code.hello',
+        'schedule': crontab(minute='*/1'),
+    }
 }
